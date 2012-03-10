@@ -7,7 +7,8 @@ class tinyApp_Controller {
 	protected $_pathinfo=null;
 	protected $_layout=null;
 	protected $_controller;
-	public $_useSession=true;
+	public    $_useSession=true;
+  
 	public function __construct($pathinfo,$controller){
 		
 		$this->_pathinfo=$pathinfo;
@@ -23,6 +24,18 @@ class tinyApp_Controller {
 		$this->_mainContent->compile_dir=$this->_pathinfo['compile'];
 		$this->_mainContent->cache_dir=$this->_pathinfo['cache'];
 	}
+  
+  public function makePage($dir,$file,$array){
+  
+  	$smarty = new Smarty();
+  	$smarty->template_dir = $this->_pathinfo['views'];
+  	$smarty->compile_dir = $this->_pathinfo['compile'];
+	  foreach($array as $key=>$value) {
+		
+		  $smarty->assign($key,$value);
+	  }
+  	return $smarty->fetch("$dir/$file.html");	
+  }
 	
 	public function display() {
 		$this->_view->display($this->_layout . '.html');
