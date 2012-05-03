@@ -2,7 +2,7 @@
 	
 $g_pathinfo=null;
 	
-function __autoload($class_name) {
+function myAutoload($class_name) {
 	
 	global $g_pathinfo;
 	if(substr($class_name,-10)=='Controller')
@@ -27,6 +27,7 @@ class tinyApp_Application {
 		global $g_pathinfo;
 		$this->_pathinfo=$pathinfo;
 		$g_pathinfo=$this->_pathinfo;
+    spl_autoload_register("myAutoload");
 		$this->SetController();
 	}
 	
