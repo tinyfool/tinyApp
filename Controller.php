@@ -23,11 +23,36 @@ class tinyApp_Controller {
 		$this->_mainContent->template_dir=$this->_pathinfo['views'];
 		$this->_mainContent->compile_dir=$this->_pathinfo['compile'];
 		$this->_mainContent->cache_dir=$this->_pathinfo['cache'];
+		$this->__uriparts=explode("/",$this->_controller['uri']);
+    
 	}
+  
+  public function intVal($index,$default=-1) {
+    
+    if(empty($this->__uriparts[$index]))
+      if($default!=-1)
+        return $default;
+      else
+        return 0;
+    $ret = intval($this->__uriparts[$index]);
+    if($ret==0)
+      if($default!=-1)
+        return $default;
+    return $ret;
+  }
+  
+  public function strVal($index,$default="") {
+    
+    if(empty($this->__uriparts[$index]))
+      return $default;
+    else
+      return $this->__uriparts[$index];
+  }
   
   public function makePage($dir,$file,$array){
   
   	$smarty = new Smarty();
+	$smarty->debugging = true;
   	$smarty->template_dir = $this->_pathinfo['views'];
   	$smarty->compile_dir = $this->_pathinfo['compile'];
 	  foreach($array as $key=>$value) {
