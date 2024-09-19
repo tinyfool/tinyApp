@@ -50,6 +50,12 @@ class tinyApp_Application {
 	private function out_error($error)
 	{
 		
+		$controller=$this->_controller;
+		$name=$controller['name'];
+		$action=$controller['action'];
+		$className=ucwords($name.'Controller');
+		$methodName=ucwords($action.'Action');
+
 		switch($error)
 		{
 			case "404":
@@ -68,7 +74,11 @@ class tinyApp_Application {
 							<script type="text/javascript"
 							  src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js">
 							</script>
-						</body>
+						';
+				echo "<!--";
+				echo $this->_pathinfo['controllers'] . '/' . $className . '.php';
+				echo "-->";
+				echo '</body>
 					</html>';
 				break;
 		}
@@ -78,10 +88,15 @@ class tinyApp_Application {
 	private function SetController() {
 		
 		if($this->_controller===null){
-			$urlArray=parse_url($this->SetRequestUri());
-			$uri=$urlArray["path"];
-			$uriparts=explode("/",$uri);
 			
+			$urlArray = parse_url($this->SetRequestUri());
+			$uri = $urlArray["path"];
+			$uriparts = explode("/",$uri);
+			$langs = array("zh","en","ja","ko","hi","es","pt");
+			if(in_array($uriparts[1],$langs))
+			{
+				array_shift($uriparts);
+			}
 			if(!isset($uriparts[1])) {
 				$name="index";
 				$action="index";
@@ -100,11 +115,11 @@ class tinyApp_Application {
 				if($action=="")
 					$action="index";
 			}
+      if($name=="index")
+          $name = "home";
 			$this->_controller=array('name'=>$name,'action'=>$action,'uri'=>$uri);
 		}
-		
 		return $this->_controller;
-	
 	}
 	
 	private function SetRequestUri() {
